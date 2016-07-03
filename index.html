@@ -61,6 +61,7 @@
         <nav class="navbar navbar-default navbar-fixed-top" id="sub-navbar">
             <div class="container">
 				<form class="navbar-form navbar-left" role="search">
+
 					<div class="btn-group btn-actions" role="group" aria-label="...">
 						<button type="button" class="btn btn-default btn-sm" aria-label="Left Align" autocomplete="off" id="btn-play-stop">
 							<span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play
@@ -72,11 +73,24 @@
 							<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Restart
 						</button>
 					</div>
+					<select class="selectpicker" data-width="fit" autocomplete="off" id="map" data-style="btn-default btn-sm">
+						<option value="clear">Clear Map</option>
+						<option value="random">Random Map</option>
+						<option value="room">Room Map</option>
+						<option value="bomberman">Bomberman Map</option>
+						<option value="corner">Corner Map</option>
+					</select>
 					<select class="selectpicker" data-width="fit" autocomplete="off" id="speed" data-style="btn-default btn-sm">
 						<option value="800">Speed 1x</option>
 						<option value="400">Speed 2x</option>
 						<option value="200" selected="selected">Speed 5x</option>
 						<option value="100" >Speed 10x</option>
+					</select>
+					<select class="selectpicker" data-width="fit" autocomplete="off" id="max-steps" data-style="btn-default btn-sm">
+						<option value="-1">Run Infinitely</option>
+						<option value="60">Run by 60 Steps</option>
+						<option value="120">Run by 120 Steps</option>
+						<option value="240">Run by 240 Steps</option>
 					</select>
 				</form>
             </div>
@@ -84,42 +98,46 @@
 		<div class="container">
 			<div class="row">
 				<div class="col-md-4">
-
 					<div class="text-center">
 						<h4>Simple (or Random)</h4>
+						<p class="status">Dirt: 0, Steps: 0</p>
 						<svg id="random-agent"></svg>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="text-center">
 						<h4>Previous Memory</h4>
+						<p class="status">Dirt: 0, Steps: 0</p>
 						<svg id="previous-memory-agent"></svg>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="text-center">
 						<h4>Full Memory</h4>
+						<p class="status">Dirt: 0, Steps: 0</p>
 						<svg id="full-memory-agent"></svg>
 					</div>
 				</div>
 			</div>
 			<div class="row">
 				<div class="col-md-4">
-
 					<div class="text-center">
 						<h4>Zig-Zag</h4>
+						<p class="status">Dirt: 0, Steps: 0</p>
 						<svg id="zig-zag-agent"></svg>
 					</div>
 				</div>
 				<div class="col-md-4">
 					<div class="text-center">
 						<h4>Greedy</h4>
+						<p class="status">Dirt: 0, Steps: 0</p>
 						<svg id="greedy-agent"></svg>
 					</div>
 				</div>
 				<div class="col-md-4">
-					<div class="text-center">
+					<div class="text-center hide">
 						<h4>Intelligent</h4>
+						<p class="status">Dirt: 0, Steps: 0</p>
 						<svg id="intelligent-agent"></svg>
 					</div>
 				</div>

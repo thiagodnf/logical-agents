@@ -36,6 +36,10 @@ define([
 				ArrayUtils.removeByElement(options, Action.MOVE_TO_BOTTOM)
 			}
 
+			if(options.length == 0){
+				options = this.rule.getOptions(agent);
+			}
+
 			this.last.i = agent.i;
 			this.last.j = agent.j;
 

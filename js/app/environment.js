@@ -6,11 +6,13 @@ define([
 
 	'use strict';
 
-    function Environment(id, dirts, rule, lines, columns) {
+    function Environment(id, walls, dirts, rule, lines, columns) {
 
         this.id = id;
 
         this.dirts = dirts;
+
+        this.walls = walls;
 
         this.snap = Snap(id);
 
@@ -25,25 +27,29 @@ define([
         this.drawGrid = function(){
             var str = "";
 
-            for ( var i = 1; i < this.lines; i++) {
+            for ( var i = 2; i < this.lines-1; i++) {
                 var line = this.snap.line(0, 0.5 + i * this.size, this.columns * this.size, i * this.size+0.5);
                 line.attr({stroke: "#000", strokeWidth: 1, strokeLinecap:"round"});
             }
 
-            for ( var j = 1; j < this.columns; j++) {
+            for ( var j = 2; j < this.columns-1; j++) {
                 var line = this.snap.line(0.5 + j * this.size, 0, 0.5+j * this.size, this.lines * this.size);
                 line.attr({stroke: "#000", strokeWidth: 1, strokeLinecap:"round"});
             }
         }
 
         this.drawWalls = function(){
-            for (var i = 0; i < this.lines; i++) {
+            for (var i = 0; i < this.walls.length; i++) {
+                var pos = this.walls[i].split("_");
+                this.snap.image("images/wall_28.png", pos[0]*this.size, pos[1]*this.size, this.size, this.size);
+            }
+            /*for (var i = 0; i < this.lines; i++) {
                 for (var j = 0; j < this.columns; j++) {
                     if(j == 0 || j == this.columns-1 || i == 0 || i == this.lines-1){
                         this.snap.image("images/wall_28.png", j*this.size, i*this.size, this.size, this.size);
                     }
                 }
-            }
+            }*/
         }
 
         this.drawDirts = function(){

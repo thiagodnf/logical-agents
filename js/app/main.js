@@ -22,19 +22,28 @@ define([
     var panel = new Panel();
 
     function restart(){
-        panel.restart();
+        panel.start();
     }
 
     function next(){
         $("#btn-play-stop").enabled(false);
         $("#btn-next").enabled(false);
         $("#btn-restart").enabled(false);
+        $("#max-steps").enabled(false);
+        $("#speed").enabled(false);
+        $("#map").enabled(false);
 
         panel.next(function(){
             $("#btn-play-stop").enabled(true);
             $("#btn-next").enabled(true);
             $("#btn-restart").enabled(true);
+            $("#max-steps").enabled(true);
+            $("#map").enabled(true);
+
+            $('.selectpicker').selectpicker('refresh');
         });
+
+        $('.selectpicker').selectpicker('refresh');
     }
 
     function playStop(){
@@ -42,6 +51,11 @@ define([
 
         $("#btn-next").enabled( ! isPlay);
         $("#btn-restart").enabled( ! isPlay);
+        $("#max-steps").enabled( ! isPlay);
+        $("#speed").enabled( ! isPlay);
+        $("#map").enabled( ! isPlay);
+
+        $('.selectpicker').selectpicker('refresh');
 
         if(isPlay){
             $("#btn-play-stop").changeTextAndIcon('glyphicon-stop','Stop');
@@ -65,13 +79,20 @@ define([
     $(function(){
         panel.initialize();
 
-        panel.draw();
-
         $('.selectpicker').selectpicker();
 
         $("#btn-play-stop").click(playStop);
         $("#btn-next").click(next);
         $("#btn-restart").click(restart);
+
+        $("#max-steps").change(function(){
+            panel.maxSteps($( "#max-steps option:selected" ).val());
+        });
+
+        $("#map").change(function(){
+            panel.map($( "#map option:selected" ).val());
+            panel.initialize();
+        });
 
         $("#speed").change(function(){
             panel.speed($( "#speed option:selected" ).val());

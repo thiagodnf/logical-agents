@@ -8,7 +8,9 @@ define([
     'zig_zag_rule',
     'greedy_rule',
     'intelligent_rule',
-], function($, Environment, RandomUtils, RandomRule, PreviousMemoryRule, FullMemoryRule, ZigZagRule, GreedyRule, IntelligentRule) {
+    'wall_utils',
+    'array_utils',
+], function($, Environment, RandomUtils, RandomRule, PreviousMemoryRule, FullMemoryRule, ZigZagRule, GreedyRule, IntelligentRule, WallUtils, ArrayUtils) {
 
 	'use strict';
 
@@ -16,40 +18,67 @@ define([
 
     var dirts = [];
 
-    var lines = 12;
+    var walls = [];
 
-    var columns = 14;
+    var lines = 13;
+
+    var columns = 13;
+
+    var speed = 200;
+
+    var map = "clear";
+
+    var maxSteps = -1;
 
     function Panel(id, type) {
 
         this.initialize = function(){
+            this.generateWalls();
             this.generateDirts();
-            this.restart();
+            this.start();
         }
 
         this.generateDirts = function(){
-            for(var i = 0; i < 12; i++){
-                var x = RandomUtils.randInt(1, columns-2);
-                var y = RandomUtils.randInt(1, lines-2);
+            dirts = [];
 
-                if(dirts.indexOf(x + "_" + y) == -1){
-                    dirts.push(x + "_" + y);
+            while(dirts.length < 12){
+                var i = RandomUtils.randInt(1, lines - 2);
+                var j = RandomUtils.randInt(1, columns - 2);
+
+                if( ! ArrayUtils.contains(walls, i + "_" + j)){
+                    if( ! ArrayUtils.contains(dirts, i + "_" + j)){
+                        dirts.push(i + "_" + j);
+                    }
                 }
             }
         }
 
-        this.restart = function(){
+        this.generateWalls = function(){
+            walls = WallUtils.getWalls(map, lines, columns);
+        };
+
+        this.start = function(){
             environments = [];
 
-            environments.push(new Environment("#random-agent", dirts, new RandomRule(), lines, columns));
-            environments.push(new Environment("#previous-memory-agent", dirts, new PreviousMemoryRule(), lines, columns));
-            environments.push(new Environment("#full-memory-agent", dirts, new FullMemoryRule(), lines, columns));
-            environments.push(new Environment("#zig-zag-agent", dirts, new ZigZagRule(), lines, columns));
-            environments.push(new Environment("#greedy-agent", dirts, new GreedyRule(), lines, columns));
-            environments.push(new Environment("#intelligent-agent", dirts, new IntelligentRule(), lines, columns));
+            environments.push(new Environment("#random-agent", walls, dirts, new RandomRule(), lines, columns));
+            environments.push(new Environment("#previous-memory-agent", walls, dirts, new PreviousMemoryRule(), lines, columns));
+            environments.push(new Environment("#full-memory-agent", walls, dirts, new FullMemoryRule(), lines, columns));
+            environments.push(new Environment("#zig-zag-agent", walls, dirts, new ZigZagRule(), lines, columns));
+            environments.push(new Environment("#greedy-agent", walls, dirts, new GreedyRule(), lines, columns));
+            //environments.push(new Environment("#intelligent-agent", walls, dirts, new IntelligentRule(), lines, columns));
+
+            this.speed(speed);
+
+            this.maxSteps(maxSteps);
+
+            this.map(map);
 
             this.draw();
         }
+
+        this.map = function(value){
+            map = value;
+        };
 
         this.draw = function(){
             $.each(environments, function(index, environment){
@@ -58,8 +87,18 @@ define([
         }
 
         this.speed = function(value){
+            speed = value;
+
             $.each(environments, function(index, environment){
                 environment.agent.speed = parseInt(value);
+            });
+        };
+
+        this.maxSteps = function(value){
+            maxSteps = value;
+
+            $.each(environments, function(index, environment){
+                environment.agent.maxSteps = parseInt(value);
             });
         };
 
@@ -67,7 +106,7 @@ define([
             var done = 0;
 
             $.each(environments, function(index, environment){
-                environment.agent.next(function(){
+                environment.agent.next(function(agent){
                     done++;
 
                     if(done == environments.length){

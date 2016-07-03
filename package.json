@@ -1,7 +1,7 @@
 {
-	"name": "vacuum-cleaner-world",
+	"name": "logical-agents",
 	"version": "1.0.0",
-	"description": "Vacuum Cleaner World",
+	"description": "Logical Agents developed in Javascript",
 	"main": "app.js",
 	"scripts": {
 		"start": "node app.js"
@@ -14,7 +14,7 @@
 	],
 	"author": "Thiago Nascimento",
 	"license": "MIT",
-	"homepage": "https://github.com/thiagodnf/vacuum-cleaner-world",
+	"homepage": "https://github.com/thiagodnf/logical-agents",
 	"dependencies": {
 		"serve-static": "",
 		"connect": "",

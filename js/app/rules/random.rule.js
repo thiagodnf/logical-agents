@@ -27,6 +27,10 @@ define([
                 ArrayUtils.removeByElement(options, Action.MOVE_TO_RIGHT)
             }
 
+			if(options.length == 0){
+				options = [Action.DO_NOTHING];
+			}
+
 			return options;
         };
     }

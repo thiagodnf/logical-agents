@@ -9,16 +9,16 @@ define([
 			return agent.env.snap.select("#dirt_" + agent.i + "_" + agent.j) != null;
 		},
 		hasWallOnRight: function(agent){
-            return agent.i + 2 == agent.env.columns;
+            return ArrayUtils.contains(agent.env.walls, (parseInt(agent.i)+1) + "_" + agent.j);
         },
         hasWallOnLeft: function(agent){
-            return agent.i == 1;
+            return ArrayUtils.contains(agent.env.walls, (parseInt(agent.i)-1) + "_" + agent.j);
         },
         hasWallOnTop: function(agent){
-            return agent.j == 1;
+            return ArrayUtils.contains(agent.env.walls, agent.i + "_" + (parseInt(agent.j)-1));
         },
         hasWallOnBottom: function(agent){
-            return agent.j + 2 == agent.env.lines;
+            return ArrayUtils.contains(agent.env.walls, agent.i + "_" + (parseInt(agent.j)+1));
         },
 
 		cameFromLeft: function(agent, last){

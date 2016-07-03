@@ -35,6 +35,7 @@ requirejs.config({
 
         array_utils: 'app/utils/array.utils',
         random_utils: 'app/utils/random.utils',
+        wall_utils: 'app/utils/wall.utils',
     }
 });
 

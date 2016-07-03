@@ -5,7 +5,8 @@ define([
     'random_rule',
     'action',
     'perception',
-], function(RandomUtils, Snap, ArrayUtils, RandomRule, Action, Perception) {
+    'jquery',
+], function(RandomUtils, Snap, ArrayUtils, RandomRule, Action, Perception, $) {
 
 	'use strict';
 
@@ -23,6 +24,14 @@ define([
 
         this.speed = 200;
 
+        this.cleanedDirt = 0;
+
+        this.steps = 0;
+
+        this.maxSteps = -1;
+
+        $(this.env.id).parent().find(".status").html("Dirt: 0, Steps: 0");
+
         this.draw = function(){
             var x = this.i * this.env.size;
             var y = this.j * this.env.size;
@@ -31,6 +40,10 @@ define([
         };
 
         this.next = function(callback){
+
+            if(this.maxSteps != -1 && this.steps >= this.maxSteps){
+                return this.done(callback);
+            }
 
             var cell = this.env.snap.select("#cell_" + this.i + "_" + this.j);;
 
@@ -46,7 +59,9 @@ define([
                 options = rule.getOptions(this);
             }
 
-            var nextAction = options[RandomUtils.randInt(0, options.length)];
+            var index = RandomUtils.randInt(0, options.length);
+
+            var nextAction = options[index];
 
             this.execute(nextAction, callback);
         }
@@ -69,12 +84,16 @@ define([
                     dirt.remove();
                 }
 
+                this.cleanedDirt++;
+
                 that.done(callback);
             }else if(action == Action.DO_NOTHING){
                 that.done(callback);
             }
 
             if(action >= 1 && action <= 4){
+                this.steps++;
+
                 this.img.animate({
                     x: this.i * this.env.size,
                     y: this.j * this.env.size
@@ -83,7 +102,9 @@ define([
         };
 
         this.done = function(callback){
-            callback();
+            $(this.env.id).parent().find(".status").html("Dirt: " + this.cleanedDirt+", Steps: " + this.steps);
+
+            callback(this.rule);
         };
     }
 

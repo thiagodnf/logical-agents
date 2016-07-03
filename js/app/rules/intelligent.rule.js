@@ -1,48 +1,75 @@
 define([
 	'array_utils',
 	'action',
+	'perception',
 	'full_memory_rule',
-	'previous_memory_rule'
-], function(ArrayUtils, Action, FullMemoryRule, PreviousMemoryRule) {
+	'random_utils',
+], function(ArrayUtils, Action, Perception, FullMemoryRule, RandomUtils) {
 
 	'use strict';
 
     function IntelligentRule() {
 
-		this.rule = new FullMemoryRule();
+		this.memory = [];
+
+		this.rule = new FullMemoryRule(false);
 
     	this.getOptions = function(agent){
 
 			var options = this.rule.getOptions(agent);
 
-			if(options.length >= 3){
-				var vPoints = this.getExtremePointsVertical();
-				var hPoints = this.getExtremePointsHorizontal();
+			console.log(options)
+			/*
+
+			this.memory.push(agent.i + "_" + agent.j);
+
+			if(options.length == 0){
+				options = this.rule.getOptions(agent);
+			}
+
+			var vPoints = this.getExtremePointsVertical();
+			var hPoints = this.getExtremePointsHorizontal();
+
+			var noVisitedCells = this.getNoVisitedCells(hPoints, vPoints);
+
+			var nearPoint = this.getNearCell(agent, noVisitedCells);
+
+			if(nearPoint){
+				if(agent.i > nearPoint[0]){
+					ArrayUtils.removeByElement(options, Action.MOVE_TO_RIGHT);
+					//options = [Action.MOVE_TO_LEFT];
+				}
+				if(agent.i < nearPoint[0]){
+					ArrayUtils.removeByElement(options, Action.MOVE_TO_LEFT);
+					//options = [Action.MOVE_TO_RIGHT];
+				}
+				if(agent.j < nearPoint[1]){
+					ArrayUtils.removeByElement(options, Action.MOVE_TO_UP);
+					//options = [Action.MOVE_TO_BOTTOM];
+				}
+				if(agent.j > nearPoint[1]){
+					ArrayUtils.removeByElement(options, Action.MOVE_TO_BOTTOM);
+					//options = [Action.MOVE_TO_TOP];
+				}
+			}
+
+/*
+			if(options.length == 0){
+				console.log("preso");
+
+				/*
 
 				var noVisitedCells = this.getNoVisitedCells(hPoints, vPoints);
 
 				var nearPoint = this.getNearCell(agent, noVisitedCells);
 
-				options = [];
+				options = this.rule.getOptions(agent);
 
-				if( ! nearPoint){
-					options = [Action.DO_NOTHING]
-				}else{
-					if(agent.i > nearPoint[0]){
-						options = [Action.MOVE_TO_LEFT];
-					}
-					if(agent.i < nearPoint[0]){
-						options = [Action.MOVE_TO_RIGHT];
-					}
-					if(agent.j < nearPoint[1]){
-						options = [Action.MOVE_TO_BOTTOM];
-					}
-					if(agent.j > nearPoint[1]){
-						options = [Action.MOVE_TO_TOP];
-					}
-				}
+				console.log(options);
+
+
 			}
-
+*/
 			return options;
         };
 
@@ -69,7 +96,7 @@ define([
 
 			for(var i = hPoints.min; i <= hPoints.max; i++){
 				for(var j = vPoints.min; j <= vPoints.max; j++){
-					if( ! ArrayUtils.contains(this.rule.memory, i + "_" + j)){
+					if( ! ArrayUtils.contains(this.memory, i + "_" + j)){
 						noVisitedCells.push(i + "_" + j)
 					}
 				}
@@ -86,8 +113,8 @@ define([
 			var max = -1;
 			var min = 99999;
 
-			for(var i = 0; i < this.rule.memory.length; i++){
-				var split = this.rule.memory[i].split("_");
+			for(var i = 0; i < this.memory.length; i++){
+				var split = this.memory[i].split("_");
 
 				if(parseInt(split[0]) > max){
 					max = parseInt(split[0]);
@@ -104,8 +131,8 @@ define([
 			var max = -1;
 			var min = 99999;
 
-			for(var i = 0; i < this.rule.memory.length; i++){
-				var split = this.rule.memory[i].split("_");
+			for(var i = 0; i < this.memory.length; i++){
+				var split = this.memory[i].split("_");
 
 				if(parseInt(split[1]) > max){
 					max = parseInt(split[1]);
