@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Logical Agents</title>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
+        <meta name="description" content="Logical Agents developed in Javascript">
+	  	<meta name="author" content="Thiago Nascimento">
+		<meta name="keywords" content="logical agents, computational intelligence, artificial intelligence">
+        <meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="apple-mobile-web-app-title" content="Logical Agents">
+		<meta name="robots" content="index, follow">
+
+		<link rel="apple-touch-icon" sizes="57x57" href="images/favicon/apple-icon-57x57.png">
+		<link rel="apple-touch-icon" sizes="60x60" href="images/favicon/apple-icon-60x60.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="images/favicon/apple-icon-72x72.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="images/favicon/apple-icon-76x76.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="images/favicon/apple-icon-114x114.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="images/favicon/apple-icon-120x120.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="images/favicon/apple-icon-144x144.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="images/favicon/apple-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-icon-180x180.png">
+		<link rel="icon" type="image/png" sizes="192x192"  href="images/favicon/android-icon-192x192.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="images/favicon/favicon-96x96.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+		<link rel="manifest" href="images/favicon/manifest.json">
+		<meta name="msapplication-TileColor" content="rgba(66, 139, 202, 1)">
+		<meta name="msapplication-TileImage" content="images/favicon/ms-icon-144x144.png">
+		<meta name="theme-color" content="rgba(66, 139, 202, 1)">
+
+		<link type="text/css" rel="stylesheet" href="css/vendor/bootstrap.min.css " />
+		<link type="text/css" rel="stylesheet" href="css/vendor/bootstrap-select.min.css " />
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<!-- Fixed navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top" id="blue-navbar">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-top" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Logical Agents</a>
+                </div>
+                <div id="navbar-top" class="navbar-collapse collapse">
+        			<ul class="nav navbar-nav">
+						<li><a href="https://github.com/thiagodnf/logical-agents" target="_blank">Source Code</a></li>
+						<li><a href="#" data-toggle="modal" data-target="#about" id="btn-about" >About</a></li>
+                    </ul>
+                </div>
+            </div>
+		</nav>
+		<!-- Fixed navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top" id="sub-navbar">
+            <div class="container">
+				<form class="navbar-form navbar-left" role="search">
+					<div class="btn-group btn-actions" role="group" aria-label="...">
+						<button type="button" class="btn btn-default btn-sm" aria-label="Left Align" autocomplete="off" id="btn-play-stop">
+							<span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play
+						</button>
+						<button type="button" class="btn btn-default btn-sm" aria-label="Left Align" autocomplete="off" id="btn-next">
+							<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span> Next
+						</button>
+						<button type="button" class="btn btn-default btn-sm" aria-label="Left Align" autocomplete="off" id="btn-restart">
+							<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Restart
+						</button>
+					</div>
+					<select class="selectpicker" data-width="fit" autocomplete="off" id="speed" data-style="btn-default btn-sm">
+						<option value="800">Speed 1x</option>
+						<option value="400">Speed 2x</option>
+						<option value="200" selected="selected">Speed 5x</option>
+						<option value="100" >Speed 10x</option>
+					</select>
+				</form>
+            </div>
+		</nav>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-4">
+
+					<div class="text-center">
+						<h4>Simple (or Random)</h4>
+						<svg id="random-agent"></svg>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="text-center">
+						<h4>Previous Memory</h4>
+						<svg id="previous-memory-agent"></svg>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="text-center">
+						<h4>Full Memory</h4>
+						<svg id="full-memory-agent"></svg>
+					</div>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-4">
+
+					<div class="text-center">
+						<h4>Zig-Zag</h4>
+						<svg id="zig-zag-agent"></svg>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="text-center">
+						<h4>Greedy</h4>
+						<svg id="greedy-agent"></svg>
+					</div>
+				</div>
+				<div class="col-md-4">
+					<div class="text-center">
+						<h4>Intelligent</h4>
+						<svg id="intelligent-agent"></svg>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal" tabindex="-1" role="dialog" id="about" aria-labelledby="label-about">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <img src="images/favicon/apple-icon-180x180.png"  class='img-responsive' alt="logo"/>
+                            </div>
+                            <div class="col-xs-10">
+                                <h4>Logical Agents</h4>
+                                <p><small>Version: 1.0.0, Developed by <a href="http://github.com/thiagodnf/" target="-_blank">Thiago Nascimento</a></small></p>
+                                <p>Logical Agents developed in Javascript.</p>
+                                <p><a href="http://github.com/thiagodnf/logical-agents/" target="_blank">How does it work?</a></p>
+                                <p><em>If you encounter any problems, please use the <a href="https://github.com/thiagodnf/logical-agents/issues" target="-_blank">GitHub Issue Tracker</a>. <br>Did you  like this project? Let me know.</em></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-close" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-46693870-18', 'auto');
+			ga('send', 'pageview');
+		</script>
+
+		<script type="text/javascript" src="js/vendor/require.js" data-main="js/app.js"></script>
+	</body>
+</html>

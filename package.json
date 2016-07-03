@@ -1,0 +1,23 @@
+{
+	"name": "vacuum-cleaner-world",
+	"version": "1.0.0",
+	"description": "Vacuum Cleaner World",
+	"main": "app.js",
+	"scripts": {
+		"start": "node app.js"
+	},
+	"engines": {
+		"node": ">=0.10.0"
+	},
+	"files": [
+		"app.js"
+	],
+	"author": "Thiago Nascimento",
+	"license": "MIT",
+	"homepage": "https://github.com/thiagodnf/vacuum-cleaner-world",
+	"dependencies": {
+		"serve-static": "",
+		"connect": "",
+		"network":""
+  	}
+}
