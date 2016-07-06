@@ -2,8 +2,10 @@ define([
     'jquery',
     'bootstrap',
     'bootstrap_select',
-    'panel',
-], function($, Bootstrap, BootstrapSelect, Panel) {
+    'bootstrap_submenu',
+    'jquery_form_validator',
+    'environment',
+], function($, Bootstrap, BootstrapSelect, BootstrapSubmenu, JQueryFormValidator, Environment) {
 
     $.fn.enabled = function(isEnable){
         if(isEnable){
@@ -19,26 +21,17 @@ define([
 
     var isPlay = false;
 
-    var panel = new Panel();
+    var environment;
 
     function restart(){
-        panel.start();
+        environment.start();
     }
 
     function next(){
-        $("#btn-play-stop").enabled(false);
-        $("#btn-next").enabled(false);
-        $("#btn-restart").enabled(false);
-        $("#max-steps").enabled(false);
-        $("#speed").enabled(false);
-        $("#map").enabled(false);
+        $(".btn-toolbar").enabled(false);
 
-        panel.next(function(){
-            $("#btn-play-stop").enabled(true);
-            $("#btn-next").enabled(true);
-            $("#btn-restart").enabled(true);
-            $("#max-steps").enabled(true);
-            $("#map").enabled(true);
+        environment.next(function(){
+            $(".btn-toolbar").enabled(true);
 
             $('.selectpicker').selectpicker('refresh');
         });
@@ -47,13 +40,15 @@ define([
     }
 
     function playStop(){
+        if( ! environment.hasAgents()){
+            alert("You should include at least a agent");
+            return;
+        }
+
         isPlay =  ! isPlay;
 
-        $("#btn-next").enabled( ! isPlay);
-        $("#btn-restart").enabled( ! isPlay);
-        $("#max-steps").enabled( ! isPlay);
-        $("#speed").enabled( ! isPlay);
-        $("#map").enabled( ! isPlay);
+        $(".btn-toolbar").enabled(! isPlay);
+        $("#btn-play-stop").enabled(true);
 
         $('.selectpicker').selectpicker('refresh');
 
@@ -71,13 +66,33 @@ define([
             return;
         }
 
-        panel.next(function(){
-            setTimeout(run, 0);
+        var done = 0;
+
+        environment.next(function(){
+            done++;
+
+            if(done == environment.agents.length){
+                setTimeout(run, 0);
+            }
         });
     }
 
     $(function(){
-        panel.initialize();
+
+        var width = $(".canvas").width();
+        var height = $(".canvas").height();
+
+        var columns = parseInt(width/28);
+        var lines = 17;
+
+        environment = new Environment("#svg","clear", 28, lines, columns);
+        environment.initialize();
+
+        $('[data-submenu]').submenupicker();
+
+        //$(".dropdown-menu > li > a").mouseover(function(){
+        //    $(this).parent().addClass("open")
+        //});
 
         $('.selectpicker').selectpicker();
 
@@ -86,16 +101,42 @@ define([
         $("#btn-restart").click(restart);
 
         $("#max-steps").change(function(){
-            panel.maxSteps($( "#max-steps option:selected" ).val());
-        });
-
-        $("#map").change(function(){
-            panel.map($( "#map option:selected" ).val());
-            panel.initialize();
+            environment.maxSteps = parseInt($( "#max-steps option:selected" ).val());
         });
 
         $("#speed").change(function(){
-            panel.speed($( "#speed option:selected" ).val());
+            environment.speed = parseInt($( "#speed option:selected" ).val());
         });
+
+        $(".btn-new-agent").click(function(){
+            var url = $(this).attr("data-agent-url");
+
+            if(url){
+                require([url], function(Agent){
+                    environment.newAgent(new Agent(environment));
+                });
+            }else{
+                $("#new-environment").modal('show');
+            }
+        });
+
+        $.validate({
+    		form : '#form-new-environment',
+    		onSuccess : function($form) {
+
+                $("#new-environment").modal("hide");
+
+                var type = $("#input-type").val();
+                var size = $("#input-size").val();
+                var lines = $("#input-lines").val();
+                var columns = $("#input-columns").val();
+
+                environment = new Environment("#svg", type, size, lines, columns);
+                environment.initialize();
+
+    			// Will stop the submission of the form
+    			return false;
+    		},
+    	});
     })
 });

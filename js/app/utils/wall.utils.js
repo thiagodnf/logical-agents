@@ -37,9 +37,25 @@ define([
 
 			var originalSize = walls.length;
 
-			while((walls.length - originalSize) < 12){
+			var max = parseInt(0.1 * (lines * columns));
+
+			while((walls.length - originalSize) < max){
 				var i = RandomUtils.randInt(1, lines - 2);
 				var j = RandomUtils.randInt(1, columns - 2);
+
+				//prevents an agent is blocked
+				if(i == 1 && j == 1){
+					continue;
+				}
+				if(i == 1 && j == 2){
+					continue;
+				}
+				if(i == 2 && j == 1){
+					continue;
+				}
+				if(i == 2 && j == 2){
+					continue;
+				}
 
 				if( ! ArrayUtils.contains(walls, i + "_" + j)){
 					walls.push(i + "_" + j);
@@ -53,7 +69,7 @@ define([
 
 			for (var j = 0; j < lines; j++) {
 				for (var i = 0; i < columns; i++) {
-					if(i > 5 && j < 6){
+					if(i > columns/2 && j < lines/2){
 						walls.push( i + "_" + j);
 					}
 				}
@@ -64,28 +80,40 @@ define([
 		getRoomWalls: function(lines, columns){
 			var walls = this.getBasicWalls(lines, columns);
 
-			walls.push("4_4");
-			walls.push("4_5");
-			walls.push("4_6");
-			walls.push("4_7");
-			walls.push("4_8");
+			for (var i = 0; i < columns; i++) {
+				for (var j = 0; j < lines; j++) {
+					if(i == 3 && (j > 2 && j < lines - 3)){
+						walls.push( i + "_" + j);
+					}
+					if(i == columns-4 && (j > 2 && j < lines - 3)){
+						walls.push( i + "_" + j);
+					}
+					if(j == lines-4 && (i > 2 && i < columns - 3)){
+						walls.push( i + "_" + j);
+					}
+					if(j == 3 && (i > 2 && i < columns - 3)){
+						walls.push( i + "_" + j);
+					}
+				}
+			}
 
-			walls.push("8_4");
-			walls.push("8_5");
-			walls.push("8_6");
-			walls.push("8_7");
-			walls.push("8_8");
+			var entrance = parseInt(columns/2) + "_" + parseInt(lines-4);
 
-			walls.push("5_4");
-			walls.push("7_4");
-
-			walls.push("5_8");
-			walls.push("6_8");
-			walls.push("7_8");
+			ArrayUtils.removeByElement(walls, entrance);
 
 			return walls;
 		},
 		getWalls: function(map, lines, columns){
+			if( ! map){
+				throw TypeError("Map cannot be undefined");
+			}
+			if( ! lines){
+				throw TypeError("Lines cannot be undefined");
+			}
+			if( ! columns){
+				throw TypeError("Columns cannot be undefined");
+			}
+
 			if(map == "clear"){
 				return this.getBasicWalls(lines, columns);
 			}else if(map == "bomberman"){

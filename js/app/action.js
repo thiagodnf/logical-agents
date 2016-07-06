@@ -11,12 +11,21 @@ define([
 		MOVE_TO_RIGHT: 4,
 		CLEAR: 5,
 		DO_NOTHING: 6,
+		getAllActions: function(){
+			return [
+				this.MOVE_TO_TOP,
+				this.MOVE_TO_BOTTOM,
+				this.MOVE_TO_RIGHT,
+				this.MOVE_TO_LEFT,
+				this.CLEAR,
+			];
+		},
 		getMovementActions: function(){
 			return [
 				this.MOVE_TO_TOP,
 				this.MOVE_TO_BOTTOM,
 				this.MOVE_TO_RIGHT,
-				this.MOVE_TO_LEFT
+				this.MOVE_TO_LEFT,
 			];
 		},
 		toString: function(options){

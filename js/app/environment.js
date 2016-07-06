@@ -2,27 +2,50 @@ define([
     'jquery',
     'agent',
     'snap_svg',
-], function($, Agent, Snap) {
+    'wall_utils',
+    'random_utils',
+    'array_utils',
+    'dirt_utils'
+], function($, Agent, Snap, WallUtils, RandomUtils, ArrayUtils, DirtUtils) {
 
 	'use strict';
 
-    function Environment(id, walls, dirts, rule, lines, columns) {
+    function Environment(id, type, size, lines, columns) {
 
         this.id = id;
 
-        this.dirts = dirts;
+        this.type = type;
 
-        this.walls = walls;
-
-        this.snap = Snap(id);
-
-        this.size = 25;
+        this.size = size;
 
         this.lines = lines;
 
         this.columns = columns;
 
-        this.agent = new Agent(this, rule);
+        this.agentID = 1;
+
+        this.speed = 200;
+
+        this.maxSteps = -1;
+
+        this.dirts = [];
+
+        this.walls = [];
+
+        this.agents = [];
+
+        this.snap = Snap(id);
+
+        this.initialize = function(){
+            this.walls = WallUtils.getWalls(this.type, this.lines, this.columns);
+            this.dirts = DirtUtils.getDirts("random", this.walls, this.lines, this.columns);
+
+            this.start();
+        };
+
+        this.start = function(){
+            this.draw();
+        }
 
         this.drawGrid = function(){
             var str = "";
@@ -43,13 +66,6 @@ define([
                 var pos = this.walls[i].split("_");
                 this.snap.image("images/wall_28.png", pos[0]*this.size, pos[1]*this.size, this.size, this.size);
             }
-            /*for (var i = 0; i < this.lines; i++) {
-                for (var j = 0; j < this.columns; j++) {
-                    if(j == 0 || j == this.columns-1 || i == 0 || i == this.lines-1){
-                        this.snap.image("images/wall_28.png", j*this.size, i*this.size, this.size, this.size);
-                    }
-                }
-            }*/
         }
 
         this.drawDirts = function(){
@@ -67,9 +83,9 @@ define([
         };
 
         this.drawCells = function(){
-            for ( var j = 0; j < this.lines; j++) {
+            for (var j = 0; j < this.lines; j++) {
 
-                for ( var i = 0; i < this.columns; i++) {
+                for (var i = 0; i < this.columns; i++) {
 
                     var cell = this.snap.rect(i*this.size, j*this.size, this.size, this.size);
 
@@ -82,8 +98,27 @@ define([
             }
         };
 
+        this.newAgent = function(agent){
+            agent.id = this.agentID++;
+
+            this.agents.push(agent);
+
+            agent.initialize();
+
+            agent.draw();
+        };
+
+        this.drawAgents = function(){
+            for (var i = 0; i < this.agents.length; i++) {
+                this.agents[i].initialize();
+                this.agents[i].draw();
+            }
+        }
+
         this.draw = function(){
             $(this.id).html("");
+
+            $("#agent-list").html("");
 
             $(this.id).width(this.columns*this.size);
             $(this.id).height(this.lines*this.size);
@@ -92,9 +127,22 @@ define([
             this.drawGrid();
             this.drawWalls();
             this.drawDirts();
-
-            this.agent.draw();
+            this.drawAgents();
         };
+
+        this.next = function(callback){
+            $.each(this.agents, function(index, agent){
+                agent.next();
+            });
+
+            $.each(this.agents, function(index, agent){
+                agent.update(callback);
+            });
+        }
+
+        this.hasAgents = function(){
+            return this.agents.length != 0;
+        }
     }
 
     return Environment;

@@ -19,6 +19,8 @@ requirejs.config({
         bootstrap: 'vendor/bootstrap.min',
         bootstrap_select: 'vendor/bootstrap-select.min',
         snap_svg: 'vendor/snap.svg-min',
+        bootstrap_submenu: 'vendor/bootstrap-submenu.min',
+        jquery_form_validator: 'vendor/jquery.form-validator.min',
 
 		agent: 'app/agent',
         environment: 'app/environment',
@@ -36,6 +38,7 @@ requirejs.config({
         array_utils: 'app/utils/array.utils',
         random_utils: 'app/utils/random.utils',
         wall_utils: 'app/utils/wall.utils',
+        dirt_utils: 'app/utils/dirt.utils',
     }
 });
 

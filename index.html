@@ -34,6 +34,7 @@
 
 		<link type="text/css" rel="stylesheet" href="css/vendor/bootstrap.min.css " />
 		<link type="text/css" rel="stylesheet" href="css/vendor/bootstrap-select.min.css " />
+		<link type="text/css" rel="stylesheet" href="css/vendor/bootstrap-submenu.min.css " />
 		<link type="text/css" rel="stylesheet" href="css/style.css" />
 	</head>
 	<body>
@@ -61,32 +62,43 @@
         <nav class="navbar navbar-default navbar-fixed-top" id="sub-navbar">
             <div class="container">
 				<form class="navbar-form navbar-left" role="search">
-
+					<div class="btn-group dropdown">
+						<button class="btn btn-default dropdown-toggle btn-sm btn-toolbar" type="button" data-toggle="dropdown" data-submenu="" aria-expanded="false">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+					  		<li class="dropdown-submenu">
+					  			<a>Agent</a>
+								<ul class="dropdown-menu">
+									<li><a href="#" class="btn-new-agent" data-agent-url="app/agents/simple">Simple (or Random)</a></li>
+									<li><a href="#" class="btn-new-agent" data-agent-url="previous-memory">Previous Memory</a></li>
+									<li><a href="#" class="btn-new-agent" data-agent-url="full-memory">Full Memory</a></li>
+									<li class="divider"></li>
+									<li><a href="#" class="btn-new-agent">Custom</a></li>
+								</ul>
+							</li>
+							<li class="divider"></li>
+							<li><a href="#" class="btn-new-agent">Environment</a></li>
+						</ul>
+					</div>
 					<div class="btn-group btn-actions" role="group" aria-label="...">
-						<button type="button" class="btn btn-default btn-sm" aria-label="Left Align" autocomplete="off" id="btn-play-stop">
+						<button type="button" class="btn btn-default btn-sm btn-toolbar" aria-label="Left Align" autocomplete="off" id="btn-play-stop">
 							<span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play
 						</button>
-						<button type="button" class="btn btn-default btn-sm" aria-label="Left Align" autocomplete="off" id="btn-next">
+						<button type="button" class="btn btn-default btn-sm btn-toolbar" aria-label="Left Align" autocomplete="off" id="btn-next">
 							<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span> Next
 						</button>
-						<button type="button" class="btn btn-default btn-sm" aria-label="Left Align" autocomplete="off" id="btn-restart">
+						<button type="button" class="btn btn-default btn-sm btn-toolbar" aria-label="Left Align" autocomplete="off" id="btn-restart">
 							<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Restart
 						</button>
 					</div>
-					<select class="selectpicker" data-width="fit" autocomplete="off" id="map" data-style="btn-default btn-sm">
-						<option value="clear">Clear Map</option>
-						<option value="random">Random Map</option>
-						<option value="room">Room Map</option>
-						<option value="bomberman">Bomberman Map</option>
-						<option value="corner">Corner Map</option>
-					</select>
-					<select class="selectpicker" data-width="fit" autocomplete="off" id="speed" data-style="btn-default btn-sm">
+					<select class="selectpicker btn-toolbar" data-width="fit" autocomplete="off" id="speed" data-style="btn-default btn-sm">
 						<option value="800">Speed 1x</option>
 						<option value="400">Speed 2x</option>
 						<option value="200" selected="selected">Speed 5x</option>
-						<option value="100" >Speed 10x</option>
+						<option value="100">Speed 10x</option>
 					</select>
-					<select class="selectpicker" data-width="fit" autocomplete="off" id="max-steps" data-style="btn-default btn-sm">
+					<select class="selectpicker btn-toolbar" data-width="fit" autocomplete="off" id="max-steps" data-style="btn-default btn-sm">
 						<option value="-1">Run Infinitely</option>
 						<option value="60">Run by 60 Steps</option>
 						<option value="120">Run by 120 Steps</option>
@@ -97,48 +109,20 @@
 		</nav>
 		<div class="container">
 			<div class="row">
-				<div class="col-md-4">
-					<div class="text-center">
-						<h4>Simple (or Random)</h4>
-						<p class="status">Dirt: 0, Steps: 0</p>
-						<svg id="random-agent"></svg>
+				<div class="col-md-9">
+					<div class="card canvas">
+						<svg id="svg"></svg>
 					</div>
 				</div>
-				<div class="col-md-4">
-					<div class="text-center">
-						<h4>Previous Memory</h4>
-						<p class="status">Dirt: 0, Steps: 0</p>
-						<svg id="previous-memory-agent"></svg>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="text-center">
-						<h4>Full Memory</h4>
-						<p class="status">Dirt: 0, Steps: 0</p>
-						<svg id="full-memory-agent"></svg>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col-md-4">
-					<div class="text-center">
-						<h4>Zig-Zag</h4>
-						<p class="status">Dirt: 0, Steps: 0</p>
-						<svg id="zig-zag-agent"></svg>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="text-center">
-						<h4>Greedy</h4>
-						<p class="status">Dirt: 0, Steps: 0</p>
-						<svg id="greedy-agent"></svg>
-					</div>
-				</div>
-				<div class="col-md-4">
-					<div class="text-center hide">
-						<h4>Intelligent</h4>
-						<p class="status">Dirt: 0, Steps: 0</p>
-						<svg id="intelligent-agent"></svg>
+				<div class="col-md-3">
+					<div class="panel">
+						<div class="panel panel-primary">
+							<div class="panel-heading">
+								<h3 class="panel-title">Agents</h3>
+							</div>
+							<div class="list-group" id="agent-list">
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -164,6 +148,56 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary btn-close" data-dismiss="modal">Close</button>
                     </div>
+                </div>
+            </div>
+        </div>
+
+		<div class="modal" tabindex="-1" role="dialog" id="new-environment" aria-labelledby="label-about">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">New Environment</h4>
+					</div>
+					<form id="form-new-environment">
+	                    <div class="modal-body">
+							<div class="form-group">
+								<label for="input-type">Choose a type:</label>
+								<select class="selectpicker form-control" data-validation="required" id="input-type">
+									<option value="clear" data-content="<img src='images/environments/clear.png' width='40px'> Clear">Relish</option>
+									<option value="bomberman" data-content="<img src='images/environments/bomberman.png' width='40px'> Bomberman">Relish</option>
+									<option value="random" data-content="<img src='images/environments/random.png' width='40px'> Random">Relish</option>
+									<option value="corner" data-content="<img src='images/environments/corner.png' width='40px'> Corner">Relish</option>
+									<option value="room" data-content="<img src='images/environments/room.png' width='40px'> Room">Relish</option>
+								</select>
+							</div>
+							<br />
+							<div class="row">
+								<div class="col-xs-4">
+									<div class="form-group">
+										<label for="input-lines">Lines:</label>
+										<input type="number" class="form-control" value="12" id="input-lines" data-validation="number" data-validation-allowing="range[5;100]" data-validation-error-msg="The number of lines should be greater than 5">
+									</div>
+								</div>
+								<div class="col-xs-4">
+									<div class="form-group">
+										<label for="input-columns">Columns:</label>
+										<input type="number" class="form-control" value="12" id="input-columns" data-validation="number" data-validation-allowing="range[5;100]" data-validation-error-msg="The number of columns should be greater than 5">
+									</div>
+								</div>
+								<div class="col-xs-4">
+									<div class="form-group">
+										<label for="input-size">Size:</label>
+										<input type="number" class="form-control" value="28" id="input-size" data-validation="number" data-validation-allowing="range[5;60]" data-validation-error-msg="The size should be greater than 5">
+									</div>
+								</div>
+							</div>
+	                    </div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">Create</button>
+	                        <button type="button" class="btn btn-default btn-close" data-dismiss="modal">Cancel</button>
+	                    </div>
+					</form>
                 </div>
             </div>
         </div>
