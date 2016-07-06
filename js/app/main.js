@@ -28,6 +28,11 @@ define([
     }
 
     function next(){
+        if( ! environment.hasAgents()){
+            alert("You should include at least a agent");
+            return;
+        }
+        
         $(".btn-toolbar").enabled(false);
 
         environment.next(function(){
@@ -89,10 +94,6 @@ define([
         environment.initialize();
 
         $('[data-submenu]').submenupicker();
-
-        //$(".dropdown-menu > li > a").mouseover(function(){
-        //    $(this).parent().addClass("open")
-        //});
 
         $('.selectpicker').selectpicker();
 

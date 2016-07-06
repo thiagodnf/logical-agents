@@ -37,16 +37,20 @@ define([
 
             var str = '';
 
+            str += '<div class="agent-list-item %%CLASS%%" data-dirts="0">';
             str += '<a href="#" class="list-group-item clearfix">';
             str += '<img src="%%IMAGE%%" width="20px"/>';
-            str += ' %%NAME%% <span id="%%ID%%" class="badge">0</span>';
+            str += ' %%NAME%% <span id="%%CLASS%%" class="badge">0</span>';
             str += '</a>';
 
+            str += '</div>';
+
             str = str.replace("%%NAME%%", this.getName());
-            str = str.replace("%%ID%%", "agent_"+this.id);
+            str = str.replace("%%CLASS%%", "agent_"+this.id);
+            str = str.replace("%%CLASS%%", "agent_"+this.id);
             str = str.replace("%%IMAGE%%", "images/agents/" + this.id +".png");
 
-            $("#agent-list").append(str);
+            $(".agent-list").append(str);
         }
         this.draw = function(){
             var x = this.getI() * this.env.size;
@@ -139,6 +143,11 @@ define([
             var that = this;
 
             $("#agent_"+this.id).text(this.cleanedDirt);
+            $(".agent_"+this.id).attr("data-dirts",this.cleanedDirt);
+
+            $('.agent-list div').sort(function(a,b){
+                return a.dataset.dirts < b.dataset.dirts
+            }).appendTo('.agent-list')
 
             var i = this.getI();
             var j = this.getJ();

@@ -52,12 +52,12 @@ define([
 
             for ( var i = 2; i < this.lines-1; i++) {
                 var line = this.snap.line(0, 0.5 + i * this.size, this.columns * this.size, i * this.size+0.5);
-                line.attr({stroke: "#000", strokeWidth: 1, strokeLinecap:"round"});
+                line.attr({stroke: "#c9e6f2", strokeWidth: 1, strokeLinecap:"round"});
             }
 
             for ( var j = 2; j < this.columns-1; j++) {
                 var line = this.snap.line(0.5 + j * this.size, 0, 0.5+j * this.size, this.lines * this.size);
-                line.attr({stroke: "#000", strokeWidth: 1, strokeLinecap:"round"});
+                line.attr({stroke: "#c9e6f2", strokeWidth: 1, strokeLinecap:"round"});
             }
         }
 
@@ -82,23 +82,12 @@ define([
             };
         };
 
-        this.drawCells = function(){
-            for (var j = 0; j < this.lines; j++) {
-
-                for (var i = 0; i < this.columns; i++) {
-
-                    var cell = this.snap.rect(i*this.size, j*this.size, this.size, this.size);
-
-                    cell.attr({
-                        id: "cell_" + i + "_" + j,
-                        fill: "#d0dafd",
-                        class: "cells",
-                    });
-                }
-            }
-        };
-
         this.newAgent = function(agent){
+            if( this.agents.length == 10){
+                alert("You cant include new agents");
+                return;
+            }
+
             agent.id = this.agentID++;
 
             this.agents.push(agent);
@@ -118,12 +107,11 @@ define([
         this.draw = function(){
             $(this.id).html("");
 
-            $("#agent-list").html("");
+            $(".agent-list").html("");
 
             $(this.id).width(this.columns*this.size);
             $(this.id).height(this.lines*this.size);
 
-            this.drawCells();
             this.drawGrid();
             this.drawWalls();
             this.drawDirts();
