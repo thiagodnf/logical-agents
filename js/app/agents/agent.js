@@ -2,37 +2,44 @@ define([
     'random_utils',
     'snap_svg',
     'array_utils',
-    'random_rule',
     'action',
     'perception',
     'jquery',
-], function(RandomUtils, Snap, ArrayUtils, RandomRule, Action, Perception, $) {
+], function(RandomUtils, Snap, ArrayUtils, Action, Perception, $) {
 
 	'use strict';
 
-    function Agent(env) {
+    // Define a simple class called "Agent".
+    var Agent = Class({
 
-        this.id = 1;
+        // Declare a property called 'name'.
+        'public immutable string name' : null,
 
-        this.env = env;
+        id: 1,
 
-        this.lastPos = [];
+        env: undefined,
 
-        this.img;
+        lastPos: [],
 
-        this.cleanedDirt = 0;
+        img: undefined,
 
-        this.steps = 0;
+        cleanedDirt: 0,
 
-        this.maxSteps = -1;
+        steps: 0,
 
-        this.initialize = function(){
+        maxSteps: -1,
+
+        name: "Unknown",
+
+        // Declare a constructor to be executed upon instantiation.
+        'private construct': function (environment, name) {
+            this.env = environment;
+            this.name = name;
+        },
+        initialize: function(env){
             this.lastPos = [];
-
             this.lastPos.push({i:1, j:1});
-
             this.cleanedDirt = 0;
-
             this.steps = 0;
 
             var str = '';
@@ -45,38 +52,39 @@ define([
 
             str += '</div>';
 
-            str = str.replace("%%NAME%%", this.getName());
+            str = str.replace("%%NAME%%", this.getName() || "Unknown");
             str = str.replace("%%CLASS%%", "agent_"+this.id);
             str = str.replace("%%CLASS%%", "agent_"+this.id);
             str = str.replace("%%IMAGE%%", "images/agents/" + this.id +".png");
 
             $(".agent-list").append(str);
-        }
-        this.draw = function(){
-            var x = this.getI() * this.env.size;
-            var y = this.getJ() * this.env.size;
+        },
 
-            this.img = this.env.snap.image("images/agents/" + this.id +".png", x, y, this.env.size, this.env.size);
-        };
+        draw: function(){
+            var x = this.getI() * this.env.getSize();
+            var y = this.getJ() * this.env.getSize();
 
-        this.next = function(callback){
+            this.img = this.env.getSnap().image("images/agents/" + this.id +".png", x, y, this.env.getSize(), this.env.getSize());
+        },
 
-            if(this.env.maxSteps != -1 && this.steps >= this.env.maxSteps){
+        next: function(callback){
+
+            if(this.env.getMaxsteps() != -1 && this.steps >= this.env.getMaxsteps()){
                 return this.update(callback);
             }
 
             var perceptions = Perception.getPerceptions(this)
 
-            var action = this.getAction(perceptions);
+            var action = this.getAction(this.getI(), this.getJ(), perceptions);
 
             if(this.isValidAction(perceptions, action)){
                 this.execute(action, callback);
             }else{
                 this.update(callback);
             }
-        }
+        },
 
-        this.isValidAction = function(perceptions, action){
+        isValidAction: function(perceptions, action){
             if(action == Action.MOVE_TO_TOP && ArrayUtils.contains(perceptions, Perception.OBSTACLE_ON_TOP)){
                 return false;
             }
@@ -94,9 +102,9 @@ define([
             }
 
             return true;
-        }
+        },
 
-        this.execute = function(action, callback){
+        execute: function(action, callback){
             var that = this;
 
             var i = this.getI();
@@ -111,7 +119,7 @@ define([
             }else if(action == Action.MOVE_TO_RIGHT){
                 i++;
             }else if(action == Action.CLEAR){
-                var dirt = this.env.snap.select("#dirt_" + i + "_" + j);
+                var dirt = this.env.getSnap().select("#dirt_" + i + "_" + j);
 
                 if(dirt != null){
                     dirt.remove();
@@ -125,41 +133,37 @@ define([
             }
 
             this.lastPos.push({i:i, j:j});
-        };
-
-        this.getI = function(){
+        },
+        getI: function(){
             return this.lastPos[this.lastPos.length - 1].i;
-        };
-
-        this.getJ = function(){
+        },
+        getJ: function(){
             return this.lastPos[this.lastPos.length - 1].j;
-        };
-
-        this.isAtPosition = function(i, j){
+        },
+        isAtPosition: function(i, j){
             return this.getI() == i && this.getJ() == j;
-        }
-
-        this.update = function(callback){
+        },
+        update: function(callback){
             var that = this;
 
             $("#agent_"+this.id).text(this.cleanedDirt);
             $(".agent_"+this.id).attr("data-dirts",this.cleanedDirt);
 
             $('.agent-list div').sort(function(a,b){
-                return a.dataset.dirts < b.dataset.dirts
-            }).appendTo('.agent-list')
+                return parseInt(a.dataset.dirts) < parseInt(b.dataset.dirts);
+            }).appendTo('.agent-list');
 
             var i = this.getI();
             var j = this.getJ();
 
             this.img.animate({
-                x: i * this.env.size,
-                y: j * this.env.size
-            }, this.env.speed, null, function(){
+                x: i * this.env.getSize(),
+                y: j * this.env.getSize()
+            }, this.env.getSpeed(), null, function(){
                 if(callback) callback();
             });
-        };
-    }
+        },
+    });
 
     return Agent;
 });

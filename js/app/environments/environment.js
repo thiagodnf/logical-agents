@@ -2,52 +2,56 @@ define([
     'jquery',
     'agent',
     'snap_svg',
-    'wall_utils',
     'random_utils',
     'array_utils',
     'dirt_utils'
-], function($, Agent, Snap, WallUtils, RandomUtils, ArrayUtils, DirtUtils) {
+], function($, Agent, Snap, RandomUtils, ArrayUtils, DirtUtils) {
 
 	'use strict';
 
-    function Environment(id, type, size, lines, columns) {
+    // Define a simple class called "Environment".
+    var Environment = Class({
+        id: '',
 
-        this.id = id;
+        type: '',
 
-        this.type = type;
+        size: '',
 
-        this.size = size;
+        lines: '',
 
-        this.lines = lines;
+        columns: '',
 
-        this.columns = columns;
+        agentID: 1,
 
-        this.agentID = 1;
+        speed: 200,
 
-        this.speed = 200;
+        maxSteps: -1,
 
-        this.maxSteps = -1;
+        dirts: [],
 
-        this.dirts = [];
+        walls: [],
 
-        this.walls = [];
+        agents: [],
 
-        this.agents = [];
+        snap: '',
+        // Declare a constructor to be executed upon instantiation.
+        'private construct': function (id, type, size, lines, columns) {
+            this.id = id;
+            this.type = type;
+            this.size = size;
+            this.lines = lines;
+            this.columns = columns;
+            this.snap = Snap(id);
+        },
+        initialize: function(){
+            //this.walls = WallUtils.getWalls(this.type, this.lines, this.columns);
 
-        this.snap = Snap(id);
-
-        this.initialize = function(){
-            this.walls = WallUtils.getWalls(this.type, this.lines, this.columns);
+            this.walls = this.generateWalls(this.lines, this.columns);
             this.dirts = DirtUtils.getDirts("random", this.walls, this.lines, this.columns);
 
-            this.start();
-        };
-
-        this.start = function(){
             this.draw();
-        }
-
-        this.drawGrid = function(){
+        },
+        drawGrid: function(){
             var str = "";
 
             for ( var i = 2; i < this.lines-1; i++) {
@@ -59,16 +63,14 @@ define([
                 var line = this.snap.line(0.5 + j * this.size, 0, 0.5+j * this.size, this.lines * this.size);
                 line.attr({stroke: "#c9e6f2", strokeWidth: 1, strokeLinecap:"round"});
             }
-        }
-
-        this.drawWalls = function(){
+        },
+        drawWalls: function(){
             for (var i = 0; i < this.walls.length; i++) {
                 var pos = this.walls[i].split("_");
                 this.snap.image("images/wall_28.png", pos[0]*this.size, pos[1]*this.size, this.size, this.size);
             }
-        }
-
-        this.drawDirts = function(){
+        },
+        drawDirts: function(){
             for (var i = 0; i < this.dirts.length; i++) {
 
                 var pos = this.dirts[i].split("_");
@@ -80,31 +82,28 @@ define([
                     class: "dirt"
                 });
             };
-        };
-
-        this.newAgent = function(agent){
+        },
+        newAgent: function(agent){
             if( this.agents.length == 10){
                 alert("You cant include new agents");
                 return;
             }
 
-            agent.id = this.agentID++;
+            agent.setId(this.agentID++);
 
             this.agents.push(agent);
 
             agent.initialize();
 
             agent.draw();
-        };
-
-        this.drawAgents = function(){
+        },
+        drawAgents: function(){
             for (var i = 0; i < this.agents.length; i++) {
                 this.agents[i].initialize();
                 this.agents[i].draw();
             }
-        }
-
-        this.draw = function(){
+        },
+        draw: function(){
             $(this.id).html("");
 
             $(".agent-list").html("");
@@ -116,9 +115,10 @@ define([
             this.drawWalls();
             this.drawDirts();
             this.drawAgents();
-        };
 
-        this.next = function(callback){
+            $(".panel").height($(".canvas").height());
+        },
+        next: function(callback){
             $.each(this.agents, function(index, agent){
                 agent.next();
             });
@@ -126,11 +126,33 @@ define([
             $.each(this.agents, function(index, agent){
                 agent.update(callback);
             });
-        }
-
-        this.hasAgents = function(){
+        },
+        hasAgents: function(){
             return this.agents.length != 0;
-        }
+        },
+        getBasicWalls: function(lines, columns){
+            var walls = [];
+
+            for (var j = 0; j < lines; j++) {
+                for (var i = 0; i < columns; i++) {
+                    if(j == 0 || j == lines - 1 || i == 0 || i == columns - 1){
+                        walls.push( i + "_" + j);
+                    }
+                }
+            }
+
+            return walls;
+        },
+        generateWalls: function(lines, columns){
+            return this.getBasicWalls(lines, columns);
+        },
+    });
+
+    return Environment;
+
+    function Environment(id, type, size, lines, columns) {
+
+
     }
 
     return Environment;

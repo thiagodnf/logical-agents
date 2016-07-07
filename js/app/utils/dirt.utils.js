@@ -9,11 +9,24 @@ define([
 		getRandomDirts: function(walls, lines, columns){
             var dirts = [];
 
-			var max = parseInt(0.08 * (lines * columns));
+			var max = parseInt(0.15 * (lines * columns));
 
             while(dirts.length < max){
 				var i = RandomUtils.randInt(1, columns - 2);
-                var j = RandomUtils.randInt(1, lines - 2);                
+                var j = RandomUtils.randInt(1, lines - 2);
+
+				if(i == 1 && j == 1){
+					continue;
+				}
+				if(i == 1 && j == 2){
+					continue;
+				}
+				if(i == 2 && j == 1){
+					continue;
+				}
+				if(i == 2 && j == 2){
+					continue;
+				}
 
                 if( ! ArrayUtils.contains(walls, i + "_" + j)){
                     if( ! ArrayUtils.contains(dirts, i + "_" + j)){

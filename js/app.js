@@ -21,23 +21,16 @@ requirejs.config({
         snap_svg: 'vendor/snap.svg-min',
         bootstrap_submenu: 'vendor/bootstrap-submenu.min',
         jquery_form_validator: 'vendor/jquery.form-validator.min',
+        joii: 'vendor/joii.min',
 
-		agent: 'app/agent',
-        environment: 'app/environment',
-        panel: 'app/panel',
-        perception: 'app/perception',
-        action: 'app/action',
-
-        random_rule: 'app/rules/random.rule',
-        previous_memory_rule: 'app/rules/previous.memory.rule',
-        full_memory_rule: 'app/rules/full.memory.rule',
-        zig_zag_rule: 'app/rules/zig-zag.rule',
-        greedy_rule: 'app/rules/greedy.rule',
-        intelligent_rule: 'app/rules/intelligent.rule',
+		agent: 'app/agents/agent',
+        environment: 'app/environments/environment',
+        environment_clear: 'app/environments/environment.clear',
+        perception: 'app/perceptions/perception',
+        action: 'app/actions/action',
 
         array_utils: 'app/utils/array.utils',
         random_utils: 'app/utils/random.utils',
-        wall_utils: 'app/utils/wall.utils',
         dirt_utils: 'app/utils/dirt.utils',
     }
 });

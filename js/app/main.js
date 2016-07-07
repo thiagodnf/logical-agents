@@ -4,8 +4,10 @@ define([
     'bootstrap_select',
     'bootstrap_submenu',
     'jquery_form_validator',
+    'joii',
     'environment',
-], function($, Bootstrap, BootstrapSelect, BootstrapSubmenu, JQueryFormValidator, Environment) {
+    'environment_clear'
+], function($, Bootstrap, BootstrapSelect, BootstrapSubmenu, JQueryFormValidator, JOII, Environment, EnvironmentClear) {
 
     $.fn.enabled = function(isEnable){
         if(isEnable){
@@ -23,16 +25,12 @@ define([
 
     var environment;
 
-    function restart(){
-        environment.start();
-    }
-
     function next(){
         if( ! environment.hasAgents()){
             alert("You should include at least a agent");
             return;
         }
-        
+
         $(".btn-toolbar").enabled(false);
 
         environment.next(function(){
@@ -76,7 +74,7 @@ define([
         environment.next(function(){
             done++;
 
-            if(done == environment.agents.length){
+            if(done == environment.getAgents().length){
                 setTimeout(run, 0);
             }
         });
@@ -88,9 +86,11 @@ define([
         var height = $(".canvas").height();
 
         var columns = parseInt(width/28);
-        var lines = 17;
+        var lines = 18;
 
-        environment = new Environment("#svg","clear", 28, lines, columns);
+        $("#input-columns").val(columns);
+
+        environment = new EnvironmentClear("#svg","clear", 28, lines, columns);
         environment.initialize();
 
         $('[data-submenu]').submenupicker();
@@ -99,14 +99,19 @@ define([
 
         $("#btn-play-stop").click(playStop);
         $("#btn-next").click(next);
-        $("#btn-restart").click(restart);
+
+        $("#btn-restart").click(function(){
+            if(confirm("Would you like to restart the environment?")){
+                environment.draw();
+            }
+        });
 
         $("#max-steps").change(function(){
-            environment.maxSteps = parseInt($( "#max-steps option:selected" ).val());
+            environment.setMaxsteps(parseInt($( "#max-steps option:selected" ).val()));
         });
 
         $("#speed").change(function(){
-            environment.speed = parseInt($( "#speed option:selected" ).val());
+            environment.setSpeed(parseInt($( "#speed option:selected" ).val()));
         });
 
         $(".btn-new-agent").click(function(){
@@ -117,8 +122,12 @@ define([
                     environment.newAgent(new Agent(environment));
                 });
             }else{
-                $("#new-environment").modal('show');
+
             }
+        });
+
+        $("#btn-new-environment").click(function(){
+            $("#new-environment").modal('show');
         });
 
         $.validate({
@@ -127,13 +136,48 @@ define([
 
                 $("#new-environment").modal("hide");
 
-                var type = $("#input-type").val();
+                var url = $("#input-type").val();
                 var size = $("#input-size").val();
                 var lines = $("#input-lines").val();
                 var columns = $("#input-columns").val();
 
-                environment = new Environment("#svg", type, size, lines, columns);
-                environment.initialize();
+                console.log("Loading " + url);
+
+                if(url == "app/environments/environment.clear"){
+                    url = 'environment_clear';
+                }
+
+                if(url){
+                    require([url], function(Environment){
+                        environment = new Environment("#svg", url, size, lines, columns);
+                        environment.initialize();
+                    });
+                }else{
+                    alert("You should define a url for the environment before");
+                }
+
+    			// Will stop the submission of the form
+    			return false;
+    		},
+    	});
+
+        $("#btn-example-custom-agent").click(function(){
+            $("#input-url-agent").val("http://pastebin.com/raw/4KieFF0t");
+        })
+
+        $.validate({
+    		form : '#form-new-custom-agent',
+    		onSuccess : function($form) {
+
+                $("#new-custom-agent").modal("hide");
+
+                var url = $("#input-url-agent").val();
+
+                if(url){
+                    require([url], function(Agent){
+                        environment.newAgent(new Agent(environment));
+                    });
+                }
 
     			// Will stop the submission of the form
     			return false;
