@@ -22,6 +22,7 @@ requirejs.config({
         bootstrap_submenu: 'vendor/bootstrap-submenu.min',
         jquery_form_validator: 'vendor/jquery.form-validator.min',
         joii: 'vendor/joii.min',
+        snackbar: 'vendor/snackbar.min',
 
 		agent: 'app/agents/agent',
         environment: 'app/environments/environment',
@@ -32,6 +33,7 @@ requirejs.config({
         array_utils: 'app/utils/array.utils',
         random_utils: 'app/utils/random.utils',
         dirt_utils: 'app/utils/dirt.utils',
+        snackbar_utils: 'app/utils/snackbar.utils',
     }
 });
 

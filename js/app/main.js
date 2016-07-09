@@ -6,8 +6,10 @@ define([
     'jquery_form_validator',
     'joii',
     'environment',
-    'environment_clear'
-], function($, Bootstrap, BootstrapSelect, BootstrapSubmenu, JQueryFormValidator, JOII, Environment, EnvironmentClear) {
+    'environment_clear',
+    'snackbar',
+    'snackbar_utils',
+], function($, Bootstrap, BootstrapSelect, BootstrapSubmenu, JQueryFormValidator, JOII, Environment, EnvironmentClear, Snackbar, SnackbarUtils) {
 
     $.fn.enabled = function(isEnable){
         if(isEnable){
@@ -27,7 +29,7 @@ define([
 
     function next(){
         if( ! environment.hasAgents()){
-            alert("You should include at least a agent");
+            SnackbarUtils.alert("You should include at least an agent");
             return;
         }
 
@@ -44,7 +46,7 @@ define([
 
     function playStop(){
         if( ! environment.hasAgents()){
-            alert("You should include at least a agent");
+            SnackbarUtils.alert("You should include at least an agent");
             return;
         }
 
@@ -78,6 +80,20 @@ define([
                 setTimeout(run, 0);
             }
         });
+    }
+
+    function createAgent(url){
+        if(url){
+            require([url], function(Agent){
+                var agent = new Agent(environment);
+
+                environment.newAgent(agent);
+
+                SnackbarUtils.success("The agent called '" + agent.getName() + "' has been added");
+            });
+        }else{
+            SnackbarUtils.error("You should define a agent");
+        }
     }
 
     $(function(){
@@ -115,15 +131,7 @@ define([
         });
 
         $(".btn-new-agent").click(function(){
-            var url = $(this).attr("data-agent-url");
-
-            if(url){
-                require([url], function(Agent){
-                    environment.newAgent(new Agent(environment));
-                });
-            }else{
-
-            }
+            createAgent($(this).attr("data-agent-url"));
         });
 
         $("#btn-new-environment").click(function(){
@@ -151,9 +159,11 @@ define([
                     require([url], function(Environment){
                         environment = new Environment("#svg", url, size, lines, columns);
                         environment.initialize();
+
+                        SnackbarUtils.success("The environment has been generated");
                     });
                 }else{
-                    alert("You should define a url for the environment before");
+                    SnackbarUtils.alert("You should define a url for the environment before");
                 }
 
     			// Will stop the submission of the form
@@ -162,7 +172,7 @@ define([
     	});
 
         $("#btn-example-custom-agent").click(function(){
-            $("#input-url-agent").val("http://pastebin.com/raw/4KieFF0t");
+            $("#input-url-agent").val("https://pastebin.com/raw/4KieFF0t");
         })
 
         $.validate({
@@ -171,13 +181,7 @@ define([
 
                 $("#new-custom-agent").modal("hide");
 
-                var url = $("#input-url-agent").val();
-
-                if(url){
-                    require([url], function(Agent){
-                        environment.newAgent(new Agent(environment));
-                    });
-                }
+                createAgent($("#input-url-agent").val());
 
     			// Will stop the submission of the form
     			return false;

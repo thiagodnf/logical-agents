@@ -22,8 +22,8 @@ define([
 			var max = parseInt(0.1 * (lines * columns));
 
 			while((walls.length - originalSize) < max){
-				var i = RandomUtils.randInt(1, lines - 2);
-				var j = RandomUtils.randInt(1, columns - 2);
+				var j = RandomUtils.randInt(1, lines - 2);
+				var i = RandomUtils.randInt(1, columns - 2);
 
 				//prevents an agent is blocked
 				if(i == 1 && j == 1){

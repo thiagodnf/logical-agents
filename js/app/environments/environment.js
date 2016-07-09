@@ -149,11 +149,4 @@ define([
     });
 
     return Environment;
-
-    function Environment(id, type, size, lines, columns) {
-
-
-    }
-
-    return Environment;
 });
