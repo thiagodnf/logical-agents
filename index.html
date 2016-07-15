@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Logical Agents</title>
+		<meta charset="utf-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=1" />
+        <meta name="description" content="Logical Agents developed in Javascript">
+	  	<meta name="author" content="Thiago Nascimento">
+		<meta name="keywords" content="logical agents, computational intelligence, artificial intelligence">
+        <meta name="mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+		<meta name="apple-mobile-web-app-title" content="Logical Agents">
+		<meta name="robots" content="index, follow">
+
+		<link rel="apple-touch-icon" sizes="57x57" href="images/favicon/apple-icon-57x57.png">
+		<link rel="apple-touch-icon" sizes="60x60" href="images/favicon/apple-icon-60x60.png">
+		<link rel="apple-touch-icon" sizes="72x72" href="images/favicon/apple-icon-72x72.png">
+		<link rel="apple-touch-icon" sizes="76x76" href="images/favicon/apple-icon-76x76.png">
+		<link rel="apple-touch-icon" sizes="114x114" href="images/favicon/apple-icon-114x114.png">
+		<link rel="apple-touch-icon" sizes="120x120" href="images/favicon/apple-icon-120x120.png">
+		<link rel="apple-touch-icon" sizes="144x144" href="images/favicon/apple-icon-144x144.png">
+		<link rel="apple-touch-icon" sizes="152x152" href="images/favicon/apple-icon-152x152.png">
+		<link rel="apple-touch-icon" sizes="180x180" href="images/favicon/apple-icon-180x180.png">
+		<link rel="icon" type="image/png" sizes="192x192"  href="images/favicon/android-icon-192x192.png">
+		<link rel="icon" type="image/png" sizes="32x32" href="images/favicon/favicon-32x32.png">
+		<link rel="icon" type="image/png" sizes="96x96" href="images/favicon/favicon-96x96.png">
+		<link rel="icon" type="image/png" sizes="16x16" href="images/favicon/favicon-16x16.png">
+		<link rel="manifest" href="images/favicon/manifest.json">
+		<meta name="msapplication-TileColor" content="rgba(66, 139, 202, 1)">
+		<meta name="msapplication-TileImage" content="images/favicon/ms-icon-144x144.png">
+		<meta name="theme-color" content="rgba(66, 139, 202, 1)">
+
+		<link type="text/css" rel="stylesheet" href="css/vendor/bootstrap.min.css " />
+		<link type="text/css" rel="stylesheet" href="css/vendor/bootstrap-select.min.css " />
+		<link type="text/css" rel="stylesheet" href="css/vendor/bootstrap-submenu.min.css " />
+		<link type="text/css" rel="stylesheet" href="css/vendor/snackbar.min.css " />
+		<link type="text/css" rel="stylesheet" href="css/vendor/snackbar-material.css" />
+		<link type="text/css" rel="stylesheet" href="css/style.css" />
+	</head>
+	<body>
+		<!-- Fixed navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top" id="blue-navbar">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-top" aria-expanded="false" aria-controls="navbar">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Logical Agents</a>
+                </div>
+                <div id="navbar-top" class="navbar-collapse collapse">
+        			<ul class="nav navbar-nav">
+						<li><a href="https://github.com/thiagodnf/logical-agents" target="_blank">Source Code</a></li>
+						<li><a href="#" data-toggle="modal" data-target="#about" id="btn-about" >About</a></li>
+                    </ul>
+                </div>
+            </div>
+		</nav>
+		<!-- Fixed navbar -->
+        <nav class="navbar navbar-default navbar-fixed-top" id="sub-navbar">
+            <div class="container">
+				<form class="navbar-form navbar-left" role="search">
+					<div class="btn-group dropdown">
+						<button class="btn btn-default dropdown-toggle btn-sm btn-toolbar" type="button" data-toggle="dropdown" data-submenu="" aria-expanded="false">
+							<span class="glyphicon glyphicon-plus" aria-hidden="true"></span> New <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+					  		<li class="dropdown-submenu">
+					  			<a>Agent</a>
+								<ul class="dropdown-menu">
+									<li><a href="#" class="btn-new-agent" data-agent-url="app/agents/agent.simple">Simple (or Random)</a></li>
+									<li><a href="#" class="btn-new-agent" data-agent-url="app/agents/agent.previous.memory">Previous Memory</a></li>
+									<li><a href="#" class="btn-new-agent" data-agent-url="app/agents/agent.full.memory">Full Memory</a></li>
+									<li class="divider"></li>
+									<li><a href="#" data-toggle="modal" data-target="#new-custom-agent">Custom</a></li>
+								</ul>
+							</li>
+							<li class="divider"></li>
+							<li><a href="#" id="btn-new-environment">Environment</a></li>
+						</ul>
+					</div>
+					<div class="btn-group btn-actions" role="group" aria-label="...">
+						<button type="button" class="btn btn-default btn-sm btn-toolbar" aria-label="Left Align" autocomplete="off" id="btn-play-stop">
+							<span class="glyphicon glyphicon-play" aria-hidden="true"></span> Play
+						</button>
+						<button type="button" class="btn btn-default btn-sm btn-toolbar" aria-label="Left Align" autocomplete="off" id="btn-next">
+							<span class="glyphicon glyphicon-step-forward" aria-hidden="true"></span> Next
+						</button>
+						<button type="button" class="btn btn-default btn-sm btn-toolbar" aria-label="Left Align" autocomplete="off" id="btn-restart">
+							<span class="glyphicon glyphicon-repeat" aria-hidden="true"></span> Restart
+						</button>
+					</div>
+					<select class="selectpicker btn-toolbar" data-width="fit" autocomplete="off" id="speed" data-style="btn-default btn-sm">
+						<option value="800">Speed 1x</option>
+						<option value="400">Speed 2x</option>
+						<option value="200" selected="selected">Speed 5x</option>
+						<option value="100">Speed 10x</option>
+						<option value="50">Speed 20x</option>
+					</select>
+					<select class="selectpicker btn-toolbar" data-width="fit" autocomplete="off" id="max-steps" data-style="btn-default btn-sm">
+						<option value="-1">Run Infinitely</option>
+						<option value="60">Run by 60 Steps</option>
+						<option value="120">Run by 120 Steps</option>
+						<option value="240">Run by 240 Steps</option>
+						<option value="480">Run by 480 Steps</option>
+						<option value="960">Run by 960 Steps</option>
+					</select>
+				</form>
+            </div>
+		</nav>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-9">
+					<div class="card canvas">
+						<svg id="svg"></svg>
+					</div>
+				</div>
+				<div class="col-md-3">
+					<div class="card panel">
+						<div class="panel-default">
+							<div class="panel-heading">
+								<h3 class="panel-title">Agents</h3>
+							</div>
+							<div class="list-group agent-list">
+
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<div class="modal" tabindex="-1" role="dialog" id="about" aria-labelledby="label-about">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-xs-2">
+                                <img src="images/favicon/apple-icon-180x180.png"  class='img-responsive' alt="logo"/>
+                            </div>
+                            <div class="col-xs-10">
+                                <h4>Logical Agents</h4>
+                                <p><small>Version: 1.0.0, Developed by <a href="http://github.com/thiagodnf/" target="-_blank">Thiago Nascimento</a></small></p>
+                                <p>Logical Agents developed in Javascript.</p>
+                                <p><a href="http://github.com/thiagodnf/logical-agents/" target="_blank">How does it work?</a></p>
+                                <p><em>If you encounter any problems, please use the <a href="https://github.com/thiagodnf/logical-agents/issues" target="-_blank">GitHub Issue Tracker</a>. <br>Did you  like this project? Let me know.</em></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-close" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+		<div class="modal" tabindex="-1" role="dialog" id="new-environment" aria-labelledby="label-about">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">New Environment</h4>
+					</div>
+					<form id="form-new-environment">
+	                    <div class="modal-body">
+							<div class="form-group">
+								<label for="input-type">Choose a type:</label>
+								<select class="selectpicker form-control" data-validation="required" id="input-type">
+									<option value="app/environments/environment.clear" data-content="<img src='images/environments/clear.png' width='40px'> Clear">Relish</option>
+									<option value="app/environments/environment.bomberman" data-content="<img src='images/environments/bomberman.png' width='40px'> Bomberman">Relish</option>
+									<option value="app/environments/environment.random" data-content="<img src='images/environments/random.png' width='40px'> Random">Relish</option>
+									<option value="app/environments/environment.corner" data-content="<img src='images/environments/corner.png' width='40px'> Corner">Relish</option>
+									<option value="app/environments/environment.room" data-content="<img src='images/environments/room.png' width='40px'> Room">Relish</option>
+								</select>
+							</div>
+							<br />
+							<div class="row">
+								<div class="col-xs-4">
+									<div class="form-group">
+										<label for="input-lines">Lines:</label>
+										<input type="number" class="form-control" value="18" id="input-lines" data-validation="number" data-validation-allowing="range[5;100]" data-validation-error-msg="The number of lines should be greater than 5">
+									</div>
+								</div>
+								<div class="col-xs-4">
+									<div class="form-group">
+										<label for="input-columns">Columns:</label>
+										<input type="number" class="form-control" value="18" id="input-columns" data-validation="number" data-validation-allowing="range[5;100]" data-validation-error-msg="The number of columns should be greater than 5">
+									</div>
+								</div>
+								<div class="col-xs-4">
+									<div class="form-group">
+										<label for="input-size">Size:</label>
+										<input type="number" class="form-control" value="28" id="input-size" data-validation="number" data-validation-allowing="range[5;60]" data-validation-error-msg="The size should be greater than 5">
+									</div>
+								</div>
+							</div>
+	                    </div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">Create</button>
+	                        <button type="button" class="btn btn-default btn-close" data-dismiss="modal">Cancel</button>
+	                    </div>
+					</form>
+                </div>
+            </div>
+        </div>
+
+		<div class="modal" tabindex="-1" role="dialog" id="new-custom-agent" aria-labelledby="label-about">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+						<h4 class="modal-title">New Custom Agent</h4>
+					</div>
+					<form id="form-new-custom-agent">
+	                    <div class="modal-body">
+							<div class="form-group">
+								<label for="input-url-agent">Where is the agent? Type the URL:</label>
+								<input type="text" class="form-control" id="input-url-agent" data-validation="url" data-validation-error-msg="Type a valid url">
+							</div>
+							<p>
+								<a href="#" id="btn-example-custom-agent">Click here to see an example</a>
+							</p>
+	                    </div>
+						<div class="modal-footer">
+							<button type="submit" class="btn btn-primary">Create</button>
+	                        <button type="button" class="btn btn-default btn-close" data-dismiss="modal">Cancel</button>
+	                    </div>
+					</form>
+                </div>
+            </div>
+        </div>
+
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+			ga('create', 'UA-46693870-18', 'auto');
+			ga('send', 'pageview');
+		</script>
+
+		<script type="text/javascript" src="js/vendor/require.js" data-main="js/app.js"></script>
+	</body>
+</html>
